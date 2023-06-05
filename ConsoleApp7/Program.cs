@@ -11,14 +11,21 @@ namespace ConsoleApp6
         static void Main(string[] args)
         {
             Monster[] monster = new Monster[]
-{
-                new Monster("ゴブリン", 20, 5, "正拳突き", 10),
-                new Monster("ゾンビ", 30, 7, "噛みつき", 15),
-                new Monster("ドラゴン", 45, 10, "炎のブレス", 25),
-                new Monster("魔王", 60, 13, "メガフレア", 30)
-};
+            {
+                new Monster("ゴブリン", 30, 10, "正拳突き", 15),
+                new Monster("デビル", 25, 6, "ソウルイート", 30),
+                new Monster("ゾンビ", 35, 15, "噛みつき", 25),
+                new Monster("ドラゴン", 60, 20, "ドラゴンブレス", 35),
+                new Monster("魔王", 80, 25, "ギガフレア", 45)
+            };
 
-            GameChar human = new GameChar("勇者", 100, 8, "エクスカリバ", 30);
+            List<GameChar> human = new List<GameChar>()
+            {
+                new GameChar("勇者", 80, 7, "エクスカリバァァァー！！！", 30, 6, 80),
+                new GameChar("魔剣士", 70, 6, "ファイアソード＆アイスソード", 20, 4, 70),
+                new GameChar("魔法使い", 60, 5, "メガフレア", 25, 4, 60)
+            };
+
             string end = "";
 
             for (int i = 0; i < monster.Length; i++)
@@ -26,99 +33,131 @@ namespace ConsoleApp6
                 Console.WriteLine(monster[i].Name + "が現れた");
                 while (true)
                 {
-                    Console.WriteLine(human.Name + "のターン");
-                    Console.WriteLine("コマンドを選択してください！");
-                    Console.WriteLine("A→普通の攻撃　B→HP回復　S→必殺技");
-                    string command = Console.ReadLine();
-                    if (command == "A")
+                    Console.WriteLine("自分たちのターン");
+                    for(int j = 0; j < human.Count; j++)
                     {
-                        Console.WriteLine(human.Name + "の攻撃！");
-                        Console.WriteLine(monster[i].Name + "に" + human.Attack + "のダメージ");
-                        monster[i].HP -= human.Attack;
-                        if (monster[i].HP <= 0)
+                        if(human[j].HP <= 0)
                         {
-                            monster[i].HP = 0;
+                            continue;
                         }
-                        Console.WriteLine(monster[i].Name + "のHPは" + monster[i].HP);
+                        human[j].showCount();
+                        Console.WriteLine(human[j].Name + "の行動を選択してください");
+                        Console.WriteLine("コマンドを選択してください！");
+                        Console.WriteLine("A→通常攻撃　B→HP回復　S→スーパーアタック");
 
-                    }
-                    else if (command == "B")
-                    {
-                        human.resulection();
-                    }
-                    else if (command == "S")
-                    {
-                        if (human.Count < 5)
+                        string command = Console.ReadLine();
+
+                        if (command == "A" || command == "a")
                         {
-                            Console.WriteLine("必殺技ゲージが溜まっていません！");
+                            Console.WriteLine(human[j].Name + "の攻撃！");
+                            Console.WriteLine(monster[i].Name + "に" + human[j].Attack + "のダメージ");
+                            monster[i].HP -= human[j].Attack;
+                            if (monster[i].HP <= 0)
+                            {
+                                monster[i].HP = 0;
+                            }
+                            Console.WriteLine(monster[i].Name + "のHPは" + monster[i].HP);
+
+                        }
+                        else if (command == "B" || command == "b")
+                        {
+                            human[j].resulection();
+                        }
+                        else if (command == "S" || command == "s")
+                        {
+                            if (human[j].Count < human[j].Gage)
+                            {
+                                Console.WriteLine("攻撃に失敗した、、、");
+                                Console.WriteLine("スーパーアタックのゲージが溜まっていません！");
+                            }
+                            else
+                            {
+                                Console.WriteLine(human[j].Name + "のスーパーアタック!！！");
+                                Console.WriteLine(human[j].SuperAttackName);
+                                monster[i].HP -= human[j].SuperAttack;
+                                Console.WriteLine(monster[i].Name + "に" + human[j].SuperAttack + "のダメージ");
+                                Console.WriteLine(monster[i].Name + "の残りHPは" + monster[i].HP);
+                                human[j].Count = 0;
+                            }
                         }
                         else
                         {
-                            Console.WriteLine(human.Name + "の必殺技!！！");
-                            Console.WriteLine(human.SuperAttackName + "ァァァー！！！");
-                            monster[i].HP -= human.SuperAttack;
-                            Console.WriteLine(monster[i].Name + "に" + human.SuperAttack + "のダメージ");
-                            Console.WriteLine(monster[i].Name + "の残りHPは" + monster[i].HP);
-                            human.Count = 0;
+                            Console.WriteLine("攻撃に失敗した、、、");
+                            Console.WriteLine("正しいコマンドを入力してください！");
+                            continue;
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("正しいコマンドを入力してください！");
-                        continue;
-                    }
 
-                    human.showCount();
+                        //敵が倒れたかの判定
+                        if (monster[i].HP <= 0)
+                        {
+                            Console.WriteLine(monster[i].Name + "を倒した");
+                            break;
+                        }
+
+                        Console.WriteLine("------------------------------------------");
+                    }
+                    
 
                     //敵が倒れたかの判定
-                    if (monster[i].HP == 0)
+                    if (monster[i].HP <= 0)
                     {
-                        Console.WriteLine(monster[i].Name + "を倒した");
                         break;
                     }
 
                     Random random = new Random();
                     int num = random.Next(1, 5);
+                    int hnum = 0;
+                    if(human.Count >= 2)
+                    {
+                        hnum = random.Next(0, human.Count - 1);
+                    }
+                    
 
                     if (num < 2)
                     {
-                        Console.WriteLine(monster[i].Name + "の必殺技！" + monster[i].SuperAttackName);
-                        human.HP -= monster[i].SuperAttack;
-                        Console.WriteLine(human.Name + "に" + monster[i].SuperAttack + "のダメージ");
-                        human.showHP();
+                        Console.WriteLine(monster[i].Name + "のスーパーアタック！" + monster[i].SuperAttackName);
+                        human[hnum].HP -= monster[i].SuperAttack;
+                        Console.WriteLine(human[hnum].Name + "に" + monster[i].SuperAttack + "のダメージ");
+                        human[hnum].showHP();
                     }
                     else
                     {
                         Console.WriteLine(monster[i].Name + "の攻撃");
-                        human.HP -= monster[i].Attack;
-                        Console.WriteLine(human.Name + "に" + monster[i].Attack + "のダメージ");
-                        human.showHP();
+                        human[hnum].HP -= monster[i].Attack;
+                        Console.WriteLine(human[hnum].Name + "に" + monster[i].Attack + "のダメージ");
+                        human[hnum].showHP();
                     }
 
-                    if (human.HP <= 0)
+                    for (int k = 0; k < human.Count; k++)
                     {
-                        break;
+                        if(human[k].HP <= 0)
+                        {
+                            human.RemoveAt(k);
+                       }
                     }
-                }
 
-                if (human.HP <= 0)
-                {
-                    Console.WriteLine(human.Name + "は倒れた");
-                    Console.WriteLine(human.Name + "は世界救えなかった");
-                    Console.WriteLine("終了しますコマンドの( E )を押してください");
-                    end = Console.ReadLine();
-                    
-                }
+                    if (human.Count == 0)
+                    {
+                        Console.WriteLine("パーティは全滅した");
+                        Console.WriteLine("勇者達は世界を救えなかった");
+                        Console.WriteLine("終了しますコマンドの( END )を入力してください");
+                        end = Console.ReadLine();
+                        Environment.Exit(0x8020);
+                    }
 
-                if (monster[monster.Length - 1].HP < 0)
+                    Console.WriteLine("------------------------------------------");
+                }
+                
+
+                if (monster[monster.Length - 1].HP <= 0)
                 {
                     Console.WriteLine(monster[i].Name + "を倒した");
                     Console.WriteLine("世界に平和が訪れた");
-                    Console.WriteLine("終了しますコマンドの( E )を押してください");
+                    Console.WriteLine("終了しますコマンドの( END )を入力してください");
                     end = Console.ReadLine();
                 }
 
-                if(end == "E")
+                if(end == "END" || end == "end")
                 {
                     Environment.Exit(0x8020);
                 }
