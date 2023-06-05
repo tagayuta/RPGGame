@@ -63,9 +63,9 @@ namespace ConsoleApp6
         public void showCount()
         {
             this.count++;
-            if (this.count >= 5)
+            if (this.count >= 6)
             {
-                this.count = 5;
+                this.count = 6;
                 Console.WriteLine("ゲージが溜まりました！　必殺技が使用できます！");
             }
             else

@@ -12,11 +12,11 @@ namespace ConsoleApp6
         {
             Monster[] monster = new Monster[]
             {
-                new Monster("ゴブリン", 30, 10, "正拳突き", 15),
-                new Monster("デビル", 25, 6, "ソウルイート", 30),
-                new Monster("ゾンビ", 35, 15, "噛みつき", 25),
-                new Monster("ドラゴン", 60, 20, "ドラゴンブレス", 35),
-                new Monster("魔王", 80, 25, "ギガフレア", 45)
+                new Monster("ゴブリン", 40, 10, "正拳突き", 20),
+                new Monster("デビル", 35, 8, "ソウルイート", 35),
+                new Monster("ゾンビ", 45, 15, "噛みつき", 30),
+                new Monster("ドラゴン", 70, 20, "ドラゴンブレス", 45),
+                new Monster("魔王", 100, 25, "ギガフレア", 55)
             };
 
             List<GameChar> human = new List<GameChar>()
@@ -151,7 +151,6 @@ namespace ConsoleApp6
 
                 if (monster[monster.Length - 1].HP <= 0)
                 {
-                    Console.WriteLine(monster[i].Name + "を倒した");
                     Console.WriteLine("世界に平和が訪れた");
                     Console.WriteLine("終了しますコマンドの( END )を入力してください");
                     end = Console.ReadLine();
